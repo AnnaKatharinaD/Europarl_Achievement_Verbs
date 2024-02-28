@@ -12,29 +12,31 @@ def make_german_subset(in_filename, out_filename):
                 if any(word in sent for word in set(target_words)):
                     out.write(sent + '\n')
 
-def create_other_subsets(input_file = 'europarl/fi-en.txt', output_file = 'fi_subset.txt'):
+
+def create_other_subsets(target_english_file = 'europarl/fi-en.txt', target_file = 'europarl/finnish.txt', output_subset_file = 'fi_subset.txt'):
     # with open('europarl/deutsch.txt', 'r') as de:
     # with open('europarl/english.txt', 'r') as en:
     #        en_sents = en.read().splitlines()
-    with open(input_file, 'r', encoding="utf8") as fi_en:
-        fi_en_sents = fi_en.read().splitlines()
+    with open(target_english_file, 'r', encoding="utf8") as target_en:
+        target_en_sents = target_en.read().splitlines()
     with open('en_subset.txt', 'r', encoding="utf8") as en:
         en_sents = en.read().splitlines()
-    with open('europarl/finnish1.txt', 'r', encoding="utf8") as fi:
-        fi_sents = fi.read().splitlines()
-    with open('fi_subset.txt', 'w') as fi_file:
+    with open(target_file, 'r', encoding="utf8") as target:
+        target_sents = target.read().splitlines()
+    # write subset file if match between the two english sentences
+    with open(output_subset_file, 'w') as output_file:
         for goal_sent in en_sents:
-            for en, fi in zip(fi_en_sents, fi_sents):
+            for en, fi in zip(target_en_sents, target_sents):
                 if goal_sent == en:
                     try:
-                        fi_file.write(fi + '\n')
+                        output_file.write(fi + '\n')
                     except UnicodeEncodeError:
                         print('Unicode Error!')
                         continue
 
-    en_to_fi_map = dict(zip(fi_en_sents, fi_sents))
+    en_to_target_map = dict(zip(target_en_sents, target_sents))
 
-    return en_to_fi_map
+    return en_to_target_map
 
 def write_matching_file(en_sents, en_to_target_map):
     with open('fi_subset.txt', 'w') as es_file:
